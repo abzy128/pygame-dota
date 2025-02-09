@@ -115,6 +115,27 @@ class Line(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.y = y
 
+class Button(pygame.sprite.Sprite):
+    def __init__(self, x, y, image_path, alt_image_path):
+        super().__init__()
+        self.normal_image = pygame.image.load(image_path)
+        self.alt_image = pygame.image.load(alt_image_path)
+        self.normal_image = pygame.transform.scale(self.normal_image, (50, 50))
+        self.alt_image = pygame.transform.scale(self.alt_image, (50, 50))
+        self.image = self.normal_image
+        self.rect = self.image.get_rect(topright=(x, y))
+        self.is_active = False
+
+    def toggle(self):
+        self.is_active = not self.is_active
+        self.image = self.alt_image if self.is_active else self.normal_image
+
+    def handle_click(self, pos):
+        if self.rect.collidepoint(pos):
+            self.toggle()
+            return True
+        return False
+
 def reset_game():
     global score, speed, game_over, game_over_fx_played
     score = 0
@@ -151,6 +172,10 @@ lines.add(Line(HEIGHT / 6 * 5))
 backgorund_music = pygame.mixer.Sound('assets/sfx/Music_valve_dota_001_music_battle_01.mp3')
 backgorund_music.play()
 
+mute_button = Button(WIDTH - 20, 20, 'assets/ui/sound_on.png', 'assets/ui/sound_off.png')
+ui_sprites = pygame.sprite.Group()
+ui_sprites.add(mute_button)
+
 def all_enemies_out_of_screen(enemies):
     for enemy in enemies:
         if enemy.rect.y <= HEIGHT:
@@ -169,6 +194,18 @@ while running:
         if event.type == pygame.KEYDOWN and game_over:
             if event.key == pygame.K_r:
                 reset_game()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+            mute_button.toggle()
+            if mute_button.is_active:
+                pygame.mixer.pause()
+            else:
+                pygame.mixer.unpause()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if mute_button.handle_click(event.pos):
+                if mute_button.is_active:
+                    pygame.mixer.pause()
+                else:
+                    pygame.mixer.unpause()
 
     keys = pygame.key.get_pressed()
     if not game_over:
@@ -209,6 +246,7 @@ while running:
         player_sprites.draw(screen)
         enemies.draw(screen)
         lines.draw(screen)
+        ui_sprites.draw(screen)
 
         score_text = font.render(f"Score: {score}", True, (255, 96, 70))
         screen.blit(score_text, (10, 10))
