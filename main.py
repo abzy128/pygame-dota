@@ -148,6 +148,9 @@ lines.add(Line(HEIGHT / 6 * 3))
 lines.add(Line(HEIGHT / 6 * 4))
 lines.add(Line(HEIGHT / 6 * 5))
 
+backgorund_music = pygame.mixer.Sound('assets/sfx/Music_valve_dota_001_music_battle_01.mp3')
+backgorund_music.play()
+
 def all_enemies_out_of_screen(enemies):
     for enemy in enemies:
         if enemy.rect.y <= HEIGHT:
