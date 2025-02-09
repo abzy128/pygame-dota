@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Abzy's techies demolitionist game")
 clock = pygame.time.Clock()
 
-font = pygame.font.Font(None, 74)
+font = pygame.font.Font("assets/fonts/NotoSans-Regular.ttf", 74)
 score = 0
 speed = 60
 
