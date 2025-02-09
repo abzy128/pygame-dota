@@ -207,7 +207,7 @@ while running:
         enemies.draw(screen)
         lines.draw(screen)
 
-        score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+        score_text = font.render(f"Score: {score}", True, (255, 96, 70))
         screen.blit(score_text, (10, 10))
 
     pygame.display.flip()
